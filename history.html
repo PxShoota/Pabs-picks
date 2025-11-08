@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PABS PICKS — History</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="logo">PABS PICKS</div>
+      <div>
+        <div class="tagline">No BS. No Fluff. Just Winners.</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="dashboard.html" class="settings-link">Dashboard</a>
+      <a href="settings.html" class="settings-link" style="margin-left:12px">Settings</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="title">Pick History</div>
+      <div class="subtle" style="margin-bottom:12px">This page reads from <code>data/picks.json</code> for historical entries.</div>
+      <div id="historyArea">
+        <div class="empty">Loading history…</div>
+      </div>
+    </div>
+    <div class="footer">Powered by Pabs</div>
+  </div>
+
+<script>
+function renderHistoryItem(p,date){
+  const legs = p.legs.map(l=>`<div class="legs">• ${l}</div>`).join('');
+  const resultBadge = p.result ? (p.result === 'W' ? '<span class="badge-win">W</span>' : '<span class="badge-loss">L</span>') : '';
+  return `<div class="slip">
+    <div class="slip-left">
+      <div class="sport">${p.sport} <span class="small" style="margin-left:8px">${p.type || ''}</span></div>
+      ${legs}
+      <div style="margin-top:8px" class="small">Confidence: <span class="conf">${p.confidence}%</span></div>
+    </div>
+    <div style="text-align:right;margin-left:12px">
+      <div class="small">${date}</div>
+      <div class="odds">${p.odds}</div>
+      <div style="margin-top:8px">${resultBadge}</div>
+    </div>
+  </div>`;
+}
+
+fetch('data/picks.json')
+  .then(r=>r.json())
+  .then(d=>{
+    const historyArea = document.getElementById('historyArea');
+    const today = d.today || [];
+    const yesterday = d.yesterday || [];
+    let html = '';
+    if(yesterday.length>0){
+      html += '<div style="margin-bottom:8px;font-weight:800">Yesterday</div>'+yesterday.map(p=>renderHistoryItem(p,'Yesterday')).join('');
+    }
+    if(d.past && d.past.length>0){
+      html += '<div style="margin-top:12px;font-weight:800">Past</div>'+d.past.map(item=>renderHistoryItem(item.pick,item.date)).join('');
+    }
+    if(!html) historyArea.innerHTML = '<div class="empty">No history yet.</div>'; else historyArea.innerHTML = html;
+  })
+  .catch(err=>{ document.getElementById('historyArea').innerHTML = '<div class="empty">Could not load history.</div>'; });
+</script>
+</body>
+</html>

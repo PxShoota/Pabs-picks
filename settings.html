@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PABS PICKS — Settings</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="logo">PABS PICKS</div>
+      <div>
+        <div class="tagline">No BS. No Fluff. Just Winners.</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="dashboard.html" class="settings-link">Dashboard</a>
+      <a href="history.html" class="settings-link" style="margin-left:12px">History</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="title">Settings</div>
+      <div class="subtle" style="margin-bottom:12px">Configuration for Pabs Picks v1 (UI). Some settings are editable locally; others require editing files.</div>
+      <div style="margin-top:12px">
+        <div class="small" style="margin-bottom:8px">Current keycode (change in <code>config.js</code> to update):</div>
+        <pre id="keyview" style="background:#0b0d0e;padding:12px;border-radius:8px;color:var(--muted)"></pre>
+        <div style="margin-top:12px" class="small">To change the login key permanently: open <code>config.js</code> and edit the <code>PABS_CONFIG.KEYCODE</code> value. Save and redeploy to GitHub Pages.</div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="small" style="margin-bottom:6px">Edit picks directly</div>
+        <div class="small">Open <code>data/picks.json</code> and replace the JSON with your updated picks. Save and redeploy.</div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="small" style="margin-bottom:6px">Want Google Sheets automation later?</div>
+        <div class="small">I can add a Google Apps Script that publishes your sheet as JSON to a URL and we can point the site at that URL.</div>
+      </div>
+
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="title">Quick Actions</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <a href="index.html"><button class="btn">Log Out (Return to Login)</button></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container"><div class="footer">Powered by Pabs</div></div>
+
+<script src="config.js"></script>
+<script>
+document.getElementById('keyview').textContent = PABS_CONFIG.KEYCODE;
+</script>
+</body>
+</html>

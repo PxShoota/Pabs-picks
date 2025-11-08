@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PABS PICKS — Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="logo">PABS PICKS</div>
+      <div>
+        <div class="tagline">No BS. No Fluff. Just Winners.</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="kv">Powered by Pabs</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card" style="max-width:480px;margin:40px auto;text-align:center">
+      <h2 class="title">Owner Access</h2>
+      <p class="subtle">Enter the access key to open your private Pabs Picks dashboard. You must enter the key every visit.</p>
+      <div style="margin-top:18px">
+        <input id="key" placeholder="Enter access key" style="padding:12px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);width:80%;background:#0b0d0e;color:#e6eef6" />
+      </div>
+      <div style="margin-top:18px">
+        <button id="enter" class="btn">Enter Dashboard</button>
+      </div>
+      <p id="msg" class="small" style="margin-top:12px"></p>
+      <p class="small" style="margin-top:18px;color:var(--muted)">Need to change the key? Edit <code>config.js</code> in the site files.</p>
+    </div>
+  </div>
+
+<script src="config.js"></script>
+<script>
+document.getElementById('enter').addEventListener('click',function(){
+  const val = document.getElementById('key').value || '';
+  if(val === PABS_CONFIG.KEYCODE){
+    // correct - go to dashboard
+    window.location.href = 'dashboard.html';
+  } else {
+    const m = document.getElementById('msg');
+    m.textContent = 'Invalid key. Check your code and try again.';
+    m.style.color = 'var(--danger)';
+  }
+});
+</script>
+</body>
+</html>

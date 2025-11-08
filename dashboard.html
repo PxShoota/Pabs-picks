@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PABS PICKS — Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="logo">PABS PICKS</div>
+      <div>
+        <div class="tagline">No BS. No Fluff. Just Winners.</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="kv">Owner Dashboard</div>
+      <a href="settings.html" class="settings-link" style="margin-left:8px">Settings</a>
+    </div>
+  </div>
+
+  <div class="container grid">
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <div class="title">Today's Picks</div>
+            <div class="subtle">High-value slips tailored to your profile</div>
+          </div>
+          <div>
+            <button id="gen" class="btn" disabled>Generate Picks (Coming Soon)</button>
+          </div>
+        </div>
+        <div id="todayList">
+          <div class="empty">Loading picks…</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="title">Yesterday's Picks</div>
+        <div class="subtle">Review recent performance</div>
+        <div id="yesterdayList" style="margin-top:12px">
+          <div class="empty">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="title">Quick Stats</div>
+        <div style="margin-top:8px">
+          <div class="small">Sports Weighting</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="kv">NBA 40%</div>
+            <div class="kv">NHL 30%</div>
+            <div class="kv">NFL 30%</div>
+          </div>
+          <div style="margin-top:12px" class="small">Default Risk: Smart Upside (+600 to +2000)</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="title">Notes</div>
+        <div class="small" style="margin-top:8px;color:var(--muted)">
+          Pabs Picker v1 (UI) — picks are loaded from <code>data/picks.json</code>.
+          Edit that file to update today or yesterday slips. Future versions will add automation to push picks from Google Sheets.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="footer">Powered by Pabs</div>
+  </div>
+
+<script>
+function renderPick(p){
+  const legs = p.legs.map(l=>`<div class="legs">• ${l}</div>`).join('');
+  const resultBadge = p.result ? (p.result === 'W' ? '<span class="badge-win">W</span>' : '<span class="badge-loss">L</span>') : '';
+  return `<div class="slip">
+    <div class="slip-left">
+      <div class="sport">${p.sport} <span class="small" style="margin-left:8px">${p.type || ''}</span></div>
+      ${legs}
+      <div style="margin-top:8px" class="small">Confidence: <span class="conf">${p.confidence}%</span></div>
+    </div>
+    <div style="text-align:right;margin-left:12px">
+      <div class="odds">${p.odds}</div>
+      <div style="margin-top:8px">${resultBadge}</div>
+    </div>
+  </div>`;
+}
+
+function loadPicks(){
+  fetch('data/picks.json')
+    .then(r=>r.json())
+    .then(d=>{
+      const t = d.today || [];
+      const y = d.yesterday || [];
+      const tcont = document.getElementById('todayList');
+      const ycont = document.getElementById('yesterdayList');
+      if(t.length===0){ tcont.innerHTML = '<div class="empty">No picks for today.</div>'; } else {
+        tcont.innerHTML = t.map(renderPick).join('');
+      }
+      if(y.length===0){ ycont.innerHTML = '<div class="empty">No picks for yesterday.</div>'; } else {
+        ycont.innerHTML = y.map(renderPick).join('');
+      }
+    })
+    .catch(err=>{
+      document.getElementById('todayList').innerHTML = '<div class="empty">Could not load picks.</div>';
+      document.getElementById('yesterdayList').innerHTML = '<div class="empty">Could not load picks.</div>';
+    });
+}
+
+window.addEventListener('load',loadPicks);
+</script>
+</body>
+</html>
