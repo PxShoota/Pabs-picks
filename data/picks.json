@@ -1,0 +1,14 @@
+{
+  "today": [
+    {
+      "sport": "NBA",
+      "type": "3-leg SGP",
+      "legs": ["LeBron 25+", "AD 10+ REB", "Lakers ML"],
+      "odds": "+850",
+      "confidence": 42,
+      "result": null
+    }
+  ],
+  "yesterday": [],
+  "past": []
+}
