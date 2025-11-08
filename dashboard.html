@@ -63,8 +63,8 @@
       <div class="card" style="margin-top:18px">
         <div class="title">Notes</div>
         <div class="small" style="margin-top:8px;color:var(--muted)">
-          Pabs Picker v1 (UI) — picks are loaded from <code>data/picks.json</code>.
-          Edit that file to update today or yesterday slips. Future versions will add automation to push picks from Google Sheets.
+          Pabs Picker v1 (UI) — picks are now loaded automatically from your Google Sheet.<br>
+          Edit the sheet to update data instantly.
         </div>
       </div>
     </div>
@@ -91,28 +91,59 @@ function renderPick(p){
   </div>`;
 }
 
-function loadPicks(){
-  fetch('data/picks.json')
-    .then(r=>r.json())
-    .then(d=>{
-      const t = d.today || [];
-      const y = d.yesterday || [];
-      const tcont = document.getElementById('todayList');
-      const ycont = document.getElementById('yesterdayList');
-      if(t.length===0){ tcont.innerHTML = '<div class="empty">No picks for today.</div>'; } else {
-        tcont.innerHTML = t.map(renderPick).join('');
+async function loadPicks() {
+  try {
+    // ✅ Your live Google Sheet link (converted to CSV)
+    const sheetUrl = "https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/e/2PACX-1vSX27zBosVxadB5zYfriEYupqrr_GtDA6vI6FzqH2RPLGf6Ky97wI4l6EYOyEl-7FxtudZi2NeKmF1h/pub?output=csv";
+
+    const response = await fetch(sheetUrl);
+    const csvText = await response.text();
+
+    // Convert CSV → structured JSON
+    const rows = csvText.trim().split("\n").slice(1);
+    const picks = { today: [], yesterday: [], past: [] };
+
+    rows.forEach(row => {
+      const [sport, type, legs, odds, confidence, result, section] = row.split(",");
+      const pick = {
+        sport: sport?.trim(),
+        type: type?.trim(),
+        legs: legs ? legs.split(";").map(x => x.trim()) : [],
+        odds: odds?.trim(),
+        confidence: Number(confidence) || 0,
+        result: result?.trim() || null
+      };
+      if (section && picks[section.trim()]) {
+        picks[section.trim()].push(pick);
       }
-      if(y.length===0){ ycont.innerHTML = '<div class="empty">No picks for yesterday.</div>'; } else {
-        ycont.innerHTML = y.map(renderPick).join('');
-      }
-    })
-    .catch(err=>{
-      document.getElementById('todayList').innerHTML = '<div class="empty">Could not load picks.</div>';
-      document.getElementById('yesterdayList').innerHTML = '<div class="empty">Could not load picks.</div>';
     });
+
+    const t = picks.today || [];
+    const y = picks.yesterday || [];
+    const tcont = document.getElementById('todayList');
+    const ycont = document.getElementById('yesterdayList');
+
+    if (t.length === 0) {
+      tcont.innerHTML = '<div class="empty">No picks for today.</div>';
+    } else {
+      tcont.innerHTML = t.map(renderPick).join('');
+    }
+
+    if (y.length === 0) {
+      ycont.innerHTML = '<div class="empty">No picks for yesterday.</div>';
+    } else {
+      ycont.innerHTML = y.map(renderPick).join('');
+    }
+
+  } catch (err) {
+    document.getElementById('todayList').innerHTML = '<div class="empty">Could not load picks.</div>';
+    document.getElementById('yesterdayList').innerHTML = '<div class="empty">Could not load picks.</div>';
+    console.error("Error loading Google Sheet:", err);
+  }
 }
 
-window.addEventListener('load',loadPicks);
+window.addEventListener('load', loadPicks);
 </script>
 </body>
 </html>
+
