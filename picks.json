@@ -1,0 +1,58 @@
+{
+  "today": [
+    {
+      "sport": "NBA",
+      "type": "3-leg SGP",
+      "legs": [
+        "Luka Doncic 28+ points",
+        "Porzingis 8+ rebounds",
+        "Mavericks ML"
+      ],
+      "odds": "+850",
+      "confidence": 42,
+      "result": null
+    },
+    {
+      "sport": "NHL",
+      "type": "2-leg Parlay",
+      "legs": [
+        "Avalanche ML",
+        "Connor McDavid 1+ point"
+      ],
+      "odds": "+720",
+      "confidence": 38,
+      "result": null
+    }
+  ],
+  "yesterday": [
+    {
+      "sport": "NFL",
+      "type": "2-leg Parlay",
+      "legs": [
+        "Chiefs ML",
+        "Mahomes 2+ TDs"
+      ],
+      "odds": "+640",
+      "confidence": 45,
+      "result": "W"
+    }
+  ],
+  "past": [
+    {
+      "date": "2025-11-06",
+      "pick": {
+        "sport": "NBA",
+        "type": "4-leg SGP",
+        "legs": [
+          "Player A 20+",
+          "Player B 10+",
+          "Team ML",
+          "Alt Total 45.5"
+        ],
+        "odds": "+1200",
+        "confidence": 22,
+        "result": "L"
+      }
+    }
+  ]
+}
